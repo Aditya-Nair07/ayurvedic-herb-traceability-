@@ -15,7 +15,10 @@ const RecentBatches = ({ batches, isLoading }) => {
           <Package className="w-10 h-10 text-gray-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-700 mb-2">No batches found</h3>
-        <p className="text-gray-500 max-w-sm mx-auto">Start by creating your first batch to track your herb supply chain.</p>
+        <p className="text-gray-500 max-w-sm mx-auto">Get started by creating your first batch to track your herb supply chain.</p>
+        <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Create Batch
+        </button>
       </div>
     );
   }
@@ -27,7 +30,8 @@ const RecentBatches = ({ batches, isLoading }) => {
       tested: 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg shadow-yellow-500/25',
       packaged: 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/25',
       'in_transit': 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25',
-      retailed: 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+      shipped: 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/25',
+      certified: 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25'
     };
 
     return (
@@ -55,7 +59,7 @@ const RecentBatches = ({ batches, isLoading }) => {
             <div className="flex items-center space-x-4">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                  <Package className="w-6 h-6 text-white" />
+                  <span className="text-white font-bold text-lg">{batch.farmerLogo || '🌾'}</span>
                 </div>
               </div>
               <div className="flex-1 min-w-0">
@@ -79,6 +83,9 @@ const RecentBatches = ({ batches, isLoading }) => {
                     {batch.harvestLocation?.address || 'Unknown location'}
                   </div>
                 </div>
+                <div className="mt-1 text-sm text-gray-600">
+                  Farmer: {batch.farmer}
+                </div>
               </div>
             </div>
             <div className="flex flex-col items-end space-y-3">
@@ -90,6 +97,9 @@ const RecentBatches = ({ batches, isLoading }) => {
                     day: 'numeric',
                     year: 'numeric'
                   })}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {batch.quantity} kg
                 </div>
               </div>
             </div>

@@ -22,37 +22,78 @@ const api = axios.create({
 
 // Demo data generators
 const generateDemoBatches = () => {
-  return Array.from({ length: 20 }, (_, i) => ({
-    batchId: `BATCH-${String(i + 1).padStart(4, '0')}`,
-    species: ['Turmeric', 'Ashwagandha', 'Brahmi', 'Neem', 'Tulsi'][i % 5],
-    farmer: `Farmer ${String.fromCharCode(65 + (i % 26))}`,
-    harvestDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    quantity: Math.floor(Math.random() * 1000) + 100,
-    status: ['harvested', 'processed', 'tested', 'certified', 'shipped'][i % 5],
-    qualityScore: Math.floor(Math.random() * 20) + 80,
-    harvestLocation: {
-      address: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`
-    },
-    createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-    complianceStatus: {
-      overall: Math.random() > 0.1 // 90% compliance rate
-    }
-  }));
+  const herbTypes = ['Turmeric', 'Ashwagandha', 'Brahmi', 'Neem', 'Tulsi'];
+  const farmers = [
+    { name: 'Rajesh Kumar', location: 'Kerala, India', logo: '🌾' },
+    { name: 'Priya Sharma', location: 'Himachal Pradesh, India', logo: '🌱' },
+    { name: 'Amit Patel', location: 'Madhya Pradesh, India', logo: '🌿' },
+    { name: 'Sunita Devi', location: 'Uttarakhand, India', logo: '🍃' },
+    { name: 'Vikram Singh', location: 'Tamil Nadu, India', logo: '🌺' }
+  ];
+  
+  const statuses = ['harvested', 'processed', 'tested', 'certified', 'shipped'];
+  
+  return Array.from({ length: 20 }, (_, i) => {
+    const herbType = herbTypes[i % herbTypes.length];
+    const farmer = farmers[i % farmers.length];
+    const status = statuses[i % statuses.length];
+    
+    return {
+      batchId: `BATCH-${String(i + 1).padStart(4, '0')}`,
+      species: herbType,
+      farmer: farmer.name,
+      farmerLogo: farmer.logo,
+      harvestDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      quantity: Math.floor(Math.random() * 1000) + 100,
+      status: status,
+      qualityScore: Math.floor(Math.random() * 20) + 80,
+      harvestLocation: {
+        address: farmer.location
+      },
+      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      complianceStatus: {
+        overall: Math.random() > 0.1 // 90% compliance rate
+      }
+    };
+  });
 };
 
 const generateDemoEvents = (batchId) => {
-  const eventTypes = ['harvest', 'transport', 'processing', 'quality_test', 'packaging', 'retail'];
-  return Array.from({ length: Math.floor(Math.random() * 5) + 3 }, (_, i) => ({
-    eventId: `EVENT-${String(i + 1).padStart(4, '0')}`,
-    batchId: batchId || `BATCH-${String(Math.floor(Math.random() * 20) + 1).padStart(4, '0')}`,
-    eventType: eventTypes[i % eventTypes.length],
-    timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-    location: {
-      address: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`
-    },
-    actorId: `Actor-${String.fromCharCode(65 + (i % 26))}`,
-    description: `Event details for ${eventTypes[i % eventTypes.length]}`
-  }));
+  const eventTypes = [
+    { type: 'harvest', name: 'Harvest', actor: 'Farmer Rajesh', logo: '🌾' },
+    { type: 'transport', name: 'Transport', actor: 'Logistics Co', logo: '🚚' },
+    { type: 'processing', name: 'Processing', actor: 'Processor Ltd', logo: '⚙️' },
+    { type: 'quality_test', name: 'Quality Test', actor: 'Lab Services', logo: '🔬' },
+    { type: 'packaging', name: 'Packaging', actor: 'Packers Inc', logo: '📦' },
+    { type: 'retail', name: 'Retail', actor: 'Ayurvedic Store', logo: '🏪' }
+  ];
+  
+  const locations = [
+    'Kerala Farm',
+    'Processing Facility',
+    'Quality Lab',
+    'Distribution Center',
+    'Retail Store'
+  ];
+  
+  return Array.from({ length: Math.floor(Math.random() * 5) + 3 }, (_, i) => {
+    const eventType = eventTypes[i % eventTypes.length];
+    const location = locations[i % locations.length];
+    
+    return {
+      eventId: `EVENT-${String(i + 1).padStart(4, '0')}`,
+      batchId: batchId || `BATCH-${String(Math.floor(Math.random() * 20) + 1).padStart(4, '0')}`,
+      eventType: eventType.type,
+      eventName: eventType.name,
+      timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      location: {
+        address: location
+      },
+      actorId: eventType.actor,
+      actorLogo: eventType.logo,
+      description: `Completed ${eventType.name.toLowerCase()} process for ${batchId || 'batch'} at ${location}`
+    };
+  });
 };
 
 // Request interceptor

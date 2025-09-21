@@ -14,26 +14,29 @@ const RecentEvents = ({ events, isLoading }) => {
           <Activity className="w-10 h-10 text-gray-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-700 mb-2">No events found</h3>
-        <p className="text-gray-500 max-w-sm mx-auto">Recent activity and events will appear here as they occur in your supply chain.</p>
+        <p className="text-gray-500 max-w-sm mx-auto">Create your first event to start tracking the supply chain.</p>
+        <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Add Event
+        </button>
       </div>
     );
   }
 
   const getEventIcon = (eventType) => {
-    const iconClasses = {
-      harvest: 'from-green-500 to-green-600 text-white shadow-lg shadow-green-500/25',
-      processing: 'from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25',
-      quality_test: 'from-yellow-500 to-yellow-600 text-white shadow-lg shadow-yellow-500/25',
-      packaging: 'from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/25',
-      transport: 'from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25',
-      retail: 'from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+    const iconMap = {
+      harvest: { icon: '🌾', color: 'from-green-500 to-green-600' },
+      processing: { icon: '⚙️', color: 'from-blue-500 to-blue-600' },
+      quality_test: { icon: '🔬', color: 'from-yellow-500 to-yellow-600' },
+      packaging: { icon: '📦', color: 'from-purple-500 to-purple-600' },
+      transport: { icon: '🚚', color: 'from-orange-500 to-orange-600' },
+      retail: { icon: '🏪', color: 'from-indigo-500 to-indigo-600' }
     };
 
+    const eventConfig = iconMap[eventType] || { icon: '📋', color: 'from-gray-500 to-gray-600' };
+
     return (
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br transform transition-all duration-300 group-hover:scale-110 ${
-        iconClasses[eventType] || 'from-gray-500 to-gray-600 text-white shadow-lg shadow-gray-500/25'
-      }`}>
-        <Activity className="w-6 h-6" />
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br transform transition-all duration-300 group-hover:scale-110 ${eventConfig.color} text-white shadow-lg shadow-${eventConfig.color.split(' ')[0].replace('from-', '')}/25`}>
+        <span className="text-lg">{eventConfig.icon}</span>
       </div>
     );
   };
@@ -78,7 +81,7 @@ const RecentEvents = ({ events, isLoading }) => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
-                  {getEventTypeLabel(event.eventType)}
+                  {event.eventName || getEventTypeLabel(event.eventType)}
                 </h4>
                 <div className="flex items-center text-sm font-medium text-gray-500 group-hover:text-gray-600 transition-colors duration-200">
                   <Clock className="w-4 h-4 mr-1.5" />
@@ -91,7 +94,10 @@ const RecentEvents = ({ events, isLoading }) => {
               <div className="flex items-center space-x-6">
                 <div className="flex items-center text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-200">
                   <User className="w-4 h-4 mr-1.5" />
-                  <span className="font-medium">{event.actorId}</span>
+                  <span className="font-medium flex items-center">
+                    <span className="mr-1">{event.actorLogo || '👤'}</span>
+                    {event.actorId}
+                  </span>
                 </div>
                 {event.location && (
                   <div className="flex items-center text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-200">
