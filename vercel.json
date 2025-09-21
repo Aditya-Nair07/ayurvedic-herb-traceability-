@@ -11,6 +11,10 @@
     {
       "src": "server/index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/manifest.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -20,19 +24,15 @@
     },
     {
       "src": "/manifest.json",
-      "dest": "/manifest.json",
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/api/manifest.js"
     },
     {
       "src": "/favicon.ico",
-      "dest": "/favicon.ico",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/server/index.js"
     },
     {
       "src": "/static/(.*)",
