@@ -23,27 +23,35 @@ const api = axios.create({
 // Demo data generators
 const generateDemoBatches = () => {
   return Array.from({ length: 20 }, (_, i) => ({
-    id: `batch-${i + 1}`,
-    herbType: ['Turmeric', 'Ashwagandha', 'Brahmi', 'Neem', 'Tulsi'][i % 5],
+    batchId: `BATCH-${String(i + 1).padStart(4, '0')}`,
+    species: ['Turmeric', 'Ashwagandha', 'Brahmi', 'Neem', 'Tulsi'][i % 5],
     farmer: `Farmer ${String.fromCharCode(65 + (i % 26))}`,
     harvestDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     quantity: Math.floor(Math.random() * 1000) + 100,
     status: ['harvested', 'processed', 'tested', 'certified', 'shipped'][i % 5],
     qualityScore: Math.floor(Math.random() * 20) + 80,
-    location: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`
+    harvestLocation: {
+      address: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`
+    },
+    createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+    complianceStatus: {
+      overall: Math.random() > 0.1 // 90% compliance rate
+    }
   }));
 };
 
 const generateDemoEvents = (batchId) => {
-  const eventTypes = ['Harvest', 'Transport', 'Processing', 'Quality Test', 'Certification', 'Shipment'];
+  const eventTypes = ['harvest', 'transport', 'processing', 'quality_test', 'packaging', 'retail'];
   return Array.from({ length: Math.floor(Math.random() * 5) + 3 }, (_, i) => ({
-    id: `event-${batchId}-${i + 1}`,
-    batchId,
-    type: eventTypes[i % eventTypes.length],
+    eventId: `EVENT-${String(i + 1).padStart(4, '0')}`,
+    batchId: batchId || `BATCH-${String(Math.floor(Math.random() * 20) + 1).padStart(4, '0')}`,
+    eventType: eventTypes[i % eventTypes.length],
     timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-    location: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`,
-    actor: `Actor ${String.fromCharCode(65 + (i % 26))}`,
-    details: `Event details for ${eventTypes[i % eventTypes.length]}`
+    location: {
+      address: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`
+    },
+    actorId: `Actor-${String.fromCharCode(65 + (i % 26))}`,
+    description: `Event details for ${eventTypes[i % eventTypes.length]}`
   }));
 };
 
@@ -259,7 +267,7 @@ if (isDemoMode) {
       const page = params.page || 1;
       
       // For demo purposes, we'll generate events for a sample batch
-      const sampleBatchId = 'batch-1';
+      const sampleBatchId = 'BATCH-0001';
       const allEvents = generateDemoEvents(sampleBatchId);
       const startIndex = (page - 1) * limit;
       const paginatedEvents = allEvents.slice(startIndex, startIndex + limit);
