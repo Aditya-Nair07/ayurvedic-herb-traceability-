@@ -1,24 +1,9 @@
 {
   "version": 2,
   "name": "ayurvedic-herb-traceability",
-  "buildCommand": "npm run vercel-build",
+  "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/build",
-  "installCommand": "npm run install-all",
-  "functions": {
-    "server/index.js": {
-      "maxDuration": 30
-    }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/build/$1"
-    }
-  ],
+  "installCommand": "npm install",
   "env": {
     "NODE_ENV": "production"
   }
