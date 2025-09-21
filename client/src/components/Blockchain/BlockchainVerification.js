@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 const BlockchainVerification = ({ eventData, batchData }) => {
   const [verificationStatus, setVerificationStatus] = useState('pending');
   const [blockchainData, setBlockchainData] = useState(null);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Simulate blockchain verification
@@ -45,9 +44,7 @@ const BlockchainVerification = ({ eventData, batchData }) => {
 
   const copyToClipboard = (text, label) => {
     navigator.clipboard.writeText(text);
-    setCopied(true);
     toast.success(`${label} copied to clipboard!`);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   const getStatusColor = () => {

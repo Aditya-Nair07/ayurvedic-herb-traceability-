@@ -6,26 +6,77 @@ import { complianceAPI } from '../../utils/api';
 import LoadingSpinner from '../UI/LoadingSpinner';
 
 const ComplianceAlerts = () => {
-  const { data: violations, isLoading } = useQuery(
+  // Check if user is authenticated and has proper role
+  const hasAuth = localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole'); // Assuming role is stored
+  const canAccessCompliance = hasAuth && (userRole === 'admin' || userRole === 'regulator');
+
+  const { data: violations, isLoading, error } = useQuery(
     'complianceViolations',
     () => complianceAPI.getViolations({ limit: 5 }),
     { 
-      refetchInterval: 10 * 60 * 1000, // 10 minutes
-      staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-      cacheTime: 15 * 60 * 1000 // Keep in cache for 15 minutes
+      enabled: canAccessCompliance, // Only run query if user has access
+      refetchInterval: canAccessCompliance ? 10 * 60 * 1000 : false, // Only refetch if user has access
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 15 * 60 * 1000,
+      retry: false,
+      onError: (error) => {
+        console.log('API call failed, using mock data:', error.message);
+      }
     }
   );
 
-  if (isLoading) {
+  // Mock data for development when API fails
+  const mockViolations = {
+    data: {
+      data: [
+        {
+          batchId: 'HERB001234',
+          species: 'Ashwagandha',
+          farmer: { username: 'farmer001', organization: 'Green Herbs Co.' },
+          violation: 'Blockchain transaction validation failed - potential data tampering detected',
+          severity: 'critical',
+          status: 'investigating',
+          detectedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          batchId: 'HERB001189',
+          species: 'Turmeric',
+          farmer: { username: 'farmer002', organization: 'Organic Valley' },
+          violation: 'Smart contract execution anomaly - quality parameters outside expected range',
+          severity: 'high',
+          status: 'open',
+          detectedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          batchId: 'HERB001156',
+          species: 'Brahmi',
+          farmer: { username: 'farmer003', organization: 'Bio Herbs Ltd.' },
+          violation: 'AI Oracle detected unusual harvest pattern - potential geo-fencing violation',
+          severity: 'medium',
+          status: 'resolved',
+          detectedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+        }
+      ]
+    }
+  };
+
+  // Always show mock data for development unless we have proper API access
+  const shouldUseMockData = !canAccessCompliance || error;
+  
+  if (isLoading && canAccessCompliance) {
     return <LoadingSpinner className="py-8" />;
   }
 
-  if (!violations?.data?.data || violations.data.data.length === 0) {
+  // Use mock data if no API access or API call failed
+  const violationsData = shouldUseMockData ? mockViolations : violations;
+
+  if (!violationsData?.data?.data || violationsData.data.data.length === 0) {
     return (
       <div className="text-center py-8">
         <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
         <p className="text-gray-500">No compliance violations found</p>
-        <p className="text-sm text-gray-400 mt-1">All batches are compliant</p>
+        <p className="text-sm text-gray-400 mt-1">All batches are compliant with blockchain validation</p>
       </div>
     );
   }
@@ -49,7 +100,15 @@ const ComplianceAlerts = () => {
 
   return (
     <div className="space-y-4">
-      {violations.data.data.map((violation, index) => (
+      {shouldUseMockData && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-800">
+            🔗 Demo Mode: Advanced blockchain compliance monitoring - {!canAccessCompliance ? 'Login as admin/regulator for live data' : 'Using simulated violations'}
+          </p>
+        </div>
+      )}
+      
+      {violationsData.data.data.map((violation, index) => (
         <div key={index} className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
           <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getSeverityColor(violation.severity)}`}>
             {getSeverityIcon(violation.severity)}
@@ -82,7 +141,7 @@ const ComplianceAlerts = () => {
         </div>
       ))}
       
-      {violations.data.data.length >= 5 && (
+      {violationsData.data.data.length >= 5 && (
         <div className="text-center pt-4">
           <Link
             to="/compliance"

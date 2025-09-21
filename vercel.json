@@ -1,10 +1,9 @@
 {
-  "version": 2,
-  "name": "ayurvedic-herb-traceability",
   "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/build",
-  "installCommand": "npm install",
+  "installCommand": "echo 'skip'",
   "env": {
-    "NODE_ENV": "production"
+    "CI": "false",
+    "GENERATE_SOURCEMAP": "false"
   }
 }

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Code, Play, CheckCircle, XCircle, Zap, Database, Shield, AlertTriangle } from 'lucide-react';
+import { Code, Play, CheckCircle, Zap, Database } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const SmartContractInterface = () => {
   const [contracts, setContracts] = useState([]);
-  const [selectedContract, setSelectedContract] = useState(null);
-  const [contractCode, setContractCode] = useState('');
   const [deploymentStatus, setDeploymentStatus] = useState('idle');
   const [executionResults, setExecutionResults] = useState([]);
 

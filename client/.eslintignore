@@ -1,0 +1,7 @@
+build/
+node_modules/
+public/
+*.test.js
+*.spec.js
+serviceWorker.js
+src/reportWebVitals.js

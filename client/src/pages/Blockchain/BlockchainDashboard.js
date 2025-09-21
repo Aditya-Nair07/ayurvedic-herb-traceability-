@@ -17,7 +17,6 @@ const BlockchainDashboard = () => {
   const [networkStatus, setNetworkStatus] = useState('healthy');
   const [loading, setLoading] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
@@ -25,7 +24,6 @@ const BlockchainDashboard = () => {
   }, []);
 
   const handleRetry = () => {
-    setRetryCount(prev => prev + 1);
     toast('Retrying blockchain data fetch...', {
       icon: '🔄',
       duration: 2000

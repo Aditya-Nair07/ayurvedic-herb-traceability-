@@ -1,0 +1,13 @@
+server/
+blockchain/
+smart-contracts/
+tests/
+docs/
+*.md
+*.sh
+.env
+.env.local
+node_modules/
+logs/
+wallet/
+setup.sh

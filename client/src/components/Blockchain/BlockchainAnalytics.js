@@ -5,8 +5,6 @@ import {
   Users, 
   Package, 
   Award,
-  BarChart3,
-  PieChart,
   Activity,
   Zap
 } from 'lucide-react';
@@ -18,52 +16,52 @@ const BlockchainAnalytics = () => {
   const [selectedMetric, setSelectedMetric] = useState('transactions');
 
   useEffect(() => {
-    fetchAnalytics();
-  }, [timeRange]);
+    const fetchAnalytics = () => {
+      // Generate comprehensive blockchain analytics
+      const mockAnalytics = {
+        overview: {
+          totalValue: Math.floor(Math.random() * 1000000) + 500000,
+          totalTransactions: Math.floor(Math.random() * 50000) + 25000,
+          activeUsers: Math.floor(Math.random() * 1000) + 500,
+          avgTransactionValue: Math.floor(Math.random() * 500) + 200,
+          networkEfficiency: (Math.random() * 10 + 90).toFixed(1),
+          carbonFootprint: (Math.random() * 5 + 2).toFixed(2)
+        },
+        trends: generateTrendData(),
+        supplyChainMetrics: {
+          farmsOnboarded: Math.floor(Math.random() * 200) + 150,
+          processorsActive: Math.floor(Math.random() * 50) + 30,
+          laboratoriesCertified: Math.floor(Math.random() * 20) + 15,
+          regulatorsConnected: Math.floor(Math.random() * 10) + 5
+        },
+        qualityMetrics: generateQualityData(),
+        geographicDistribution: [
+          { region: 'North India', value: 35, transactions: 8500 },
+          { region: 'South India', value: 28, transactions: 6800 },
+          { region: 'West India', value: 22, transactions: 5200 },
+          { region: 'East India', value: 15, transactions: 3500 }
+        ],
+        herbPopularity: [
+          { name: 'Turmeric', transactions: 4500, value: 125000, trend: '+12%' },
+          { name: 'Ashwagandha', transactions: 3200, value: 98000, trend: '+8%' },
+          { name: 'Brahmi', transactions: 2800, value: 76000, trend: '+15%' },
+          { name: 'Neem', transactions: 2100, value: 54000, trend: '+5%' },
+          { name: 'Tulsi', transactions: 1900, value: 43000, trend: '+22%' }
+        ],
+        consensusHealth: {
+          validatorNodes: 24,
+          averageBlockTime: 3.2,
+          networkHashRate: '2.5 TH/s',
+          forkEvents: 0,
+          uptimePercentage: 99.97
+        }
+      };
 
-  const fetchAnalytics = () => {
-    // Generate comprehensive blockchain analytics
-    const mockAnalytics = {
-      overview: {
-        totalValue: Math.floor(Math.random() * 1000000) + 500000,
-        totalTransactions: Math.floor(Math.random() * 50000) + 25000,
-        activeUsers: Math.floor(Math.random() * 1000) + 500,
-        avgTransactionValue: Math.floor(Math.random() * 500) + 200,
-        networkEfficiency: (Math.random() * 10 + 90).toFixed(1),
-        carbonFootprint: (Math.random() * 5 + 2).toFixed(2)
-      },
-      trends: generateTrendData(),
-      supplyChainMetrics: {
-        farmsOnboarded: Math.floor(Math.random() * 200) + 150,
-        processorsActive: Math.floor(Math.random() * 50) + 30,
-        laboratoriesCertified: Math.floor(Math.random() * 20) + 15,
-        regulatorsConnected: Math.floor(Math.random() * 10) + 5
-      },
-      qualityMetrics: generateQualityData(),
-      geographicDistribution: [
-        { region: 'North India', value: 35, transactions: 8500 },
-        { region: 'South India', value: 28, transactions: 6800 },
-        { region: 'West India', value: 22, transactions: 5200 },
-        { region: 'East India', value: 15, transactions: 3500 }
-      ],
-      herbPopularity: [
-        { name: 'Turmeric', transactions: 4500, value: 125000, trend: '+12%' },
-        { name: 'Ashwagandha', transactions: 3200, value: 98000, trend: '+8%' },
-        { name: 'Brahmi', transactions: 2800, value: 76000, trend: '+15%' },
-        { name: 'Neem', transactions: 2100, value: 54000, trend: '+5%' },
-        { name: 'Tulsi', transactions: 1900, value: 43000, trend: '+22%' }
-      ],
-      consensusHealth: {
-        validatorNodes: 24,
-        averageBlockTime: 3.2,
-        networkHashRate: '2.5 TH/s',
-        forkEvents: 0,
-        uptimePercentage: 99.97
-      }
+      setAnalytics(mockAnalytics);
     };
 
-    setAnalytics(mockAnalytics);
-  };
+    fetchAnalytics();
+  }, [timeRange]);
 
   const generateTrendData = () => {
     const days = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
