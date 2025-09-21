@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
@@ -82,6 +83,22 @@ app.use((req, res, next) => {
   next();
 });
 
+// Static files that don't require authentication
+const publicPaths = ['/manifest.json', '/favicon.ico', '/static/', '/logo', '/sockjs-node/'];
+const isPublicPath = (path) => publicPaths.some(publicPath => path.startsWith(publicPath));
+
+// Skip authentication for public paths
+app.use((req, res, next) => {
+  if (isPublicPath(req.path)) {
+    return next();
+  }
+  // Continue to other middleware for protected routes
+  next();
+});
+
+// Serve static files from client build directory
+app.use(express.static(path.join(__dirname, '../client/build')));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ 
@@ -95,6 +112,38 @@ app.get('/health', (req, res) => {
 // Favicon endpoint to prevent 404 errors
 app.get('/favicon.ico', (req, res) => {
   res.status(204).end();
+});
+
+// Manifest.json endpoint - serve without authentication
+app.get('/manifest.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  
+  const manifest = {
+    "short_name": "Herb Trace",
+    "name": "Ayurvedic Herb Traceability System",
+    "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
+      }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#3b82f6",
+    "background_color": "#ffffff",
+    "description": "Blockchain-based botanical traceability system for Ayurvedic herbs",
+    "categories": ["productivity", "business", "utilities"],
+    "lang": "en",
+    "dir": "ltr",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "prefer_related_applications": false
+  };
+  
+  res.json(manifest);
 });
 
 // Root endpoint
@@ -143,13 +192,19 @@ app.set('io', io);
 // Error handling middleware
 app.use(errorHandler);
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ 
-    error: 'Route not found',
-    path: req.originalUrl,
-    method: req.method
-  });
+// Serve React app for any non-API routes
+app.get('*', (req, res) => {
+  // Skip API routes
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ 
+      error: 'API route not found',
+      path: req.originalUrl,
+      method: req.method
+    });
+  }
+  
+  // Serve React app for all other routes
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 // Initialize services
