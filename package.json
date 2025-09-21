@@ -1,0 +1,50 @@
+{
+  "name": "ayurvedic-herb-traceability",
+  "version": "1.0.0",
+  "description": "Blockchain-based botanical traceability system for Ayurvedic herbs",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "test": "jest",
+    "build": "cd client && npm install && npm run build",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "fabric:start": "cd blockchain && ./start-network.sh",
+    "fabric:stop": "cd blockchain && ./stop-network.sh",
+    "vercel-build": "cd client && npm install && npm run build",
+    "postinstall": "cd client && npm install && cd ../server && npm install"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "multer": "^1.4.5-lts.1",
+    "ipfs-http-client": "^60.0.1",
+    "qrcode": "^1.5.3",
+    "fabric-ca-client": "^2.2.15",
+    "fabric-network": "^2.2.15",
+    "winston": "^3.11.0",
+    "joi": "^17.11.0",
+    "dotenv": "^16.3.1",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [
+    "blockchain",
+    "traceability",
+    "ayurvedic",
+    "herbs",
+    "supply-chain",
+    "hyperledger-fabric"
+  ],
+  "author": "Ayurvedic Traceability System",
+  "license": "MIT"
+}
