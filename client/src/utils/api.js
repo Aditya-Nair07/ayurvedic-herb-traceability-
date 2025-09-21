@@ -253,15 +253,17 @@ if (isDemoMode) {
       console.log('Returning mock batch stats');
       return Promise.resolve({
         data: {
-          overview: {
-            totalBatches: 187,
-            harvested: 52,
-            processed: 45,
-            tested: 42,
-            certified: 38,
-            shipped: 15,
-            in_transit: 8,
-            packaged: 35
+          data: {
+            overview: {
+              totalBatches: 187,
+              harvested: 52,
+              processed: 45,
+              tested: 42,
+              certified: 38,
+              shipped: 15,
+              in_transit: 8,
+              packaged: 35
+            }
           }
         },
         status: 200,
@@ -285,18 +287,20 @@ if (isDemoMode) {
       
       return Promise.resolve({
         data: {
-          overview: {
-            totalEvents: 542,
-            harvest: 98,
-            transport: 87,
-            processing: 112,
-            testing: 95,
-            certification: 68,
-            shipment: 42,
-            packaging: 75,
-            retail: 35
-          },
-          dailyActivity: dailyActivity
+          data: {
+            overview: {
+              totalEvents: 542,
+              harvest: 98,
+              transport: 87,
+              processing: 112,
+              testing: 95,
+              certification: 68,
+              shipment: 42,
+              packaging: 75,
+              retail: 35
+            },
+            dailyActivity: dailyActivity
+          }
         },
         status: 200,
         statusText: 'OK',
@@ -309,12 +313,14 @@ if (isDemoMode) {
       console.log('Returning mock compliance stats');
       return Promise.resolve({
         data: {
-          overview: {
-            complianceRate: 96,
-            totalViolations: 2,
-            pendingReviews: 8,
-            resolvedIssues: 95,
-            compliantBatches: 178
+          data: {
+            overview: {
+              complianceRate: 96,
+              totalViolations: 2,
+              pendingReviews: 8,
+              resolvedIssues: 95,
+              compliantBatches: 178
+            }
           }
         },
         status: 200,
@@ -337,7 +343,15 @@ if (isDemoMode) {
       const paginatedBatches = allBatches.slice(startIndex, startIndex + limit);
       
       return Promise.resolve({
-        data: paginatedBatches,
+        data: {
+          data: paginatedBatches,
+          pagination: {
+            page: page,
+            limit: limit,
+            total: allBatches.length,
+            pages: Math.ceil(allBatches.length / limit)
+          }
+        },
         status: 200,
         statusText: 'OK',
         headers: {},
@@ -359,7 +373,15 @@ if (isDemoMode) {
       const paginatedEvents = allEvents.slice(startIndex, startIndex + limit);
       
       return Promise.resolve({
-        data: paginatedEvents,
+        data: {
+          data: paginatedEvents,
+          pagination: {
+            page: page,
+            limit: limit,
+            total: allEvents.length,
+            pages: Math.ceil(allEvents.length / limit)
+          }
+        },
         status: 200,
         statusText: 'OK',
         headers: {},
