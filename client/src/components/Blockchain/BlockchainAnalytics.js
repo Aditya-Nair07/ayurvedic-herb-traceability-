@@ -16,6 +16,26 @@ const BlockchainAnalytics = () => {
   const [selectedMetric, setSelectedMetric] = useState('transactions');
 
   useEffect(() => {
+    const generateTrendData = () => {
+      const days = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
+      return Array.from({ length: days }, (_, i) => ({
+        date: new Date(Date.now() - (days - i - 1) * (timeRange === '24h' ? 3600000 : 86400000)).toISOString().split('T')[0],
+        transactions: Math.floor(Math.random() * 1000) + 500,
+        value: Math.floor(Math.random() * 50000) + 25000,
+        users: Math.floor(Math.random() * 100) + 50,
+        quality: Math.floor(Math.random() * 20) + 80
+      }));
+    };
+
+    const generateQualityData = () => {
+      return [
+        { grade: 'Premium A+', count: 156, percentage: 45, color: '#10B981' },
+        { grade: 'Grade A', count: 112, percentage: 32, color: '#3B82F6' },
+        { grade: 'Grade B', count: 58, percentage: 17, color: '#F59E0B' },
+        { grade: 'Grade C', count: 21, percentage: 6, color: '#EF4444' }
+      ];
+    };
+
     const fetchAnalytics = () => {
       // Generate comprehensive blockchain analytics
       const mockAnalytics = {
@@ -62,26 +82,6 @@ const BlockchainAnalytics = () => {
 
     fetchAnalytics();
   }, [timeRange]);
-
-  const generateTrendData = () => {
-    const days = timeRange === '24h' ? 24 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
-    return Array.from({ length: days }, (_, i) => ({
-      date: new Date(Date.now() - (days - i - 1) * (timeRange === '24h' ? 3600000 : 86400000)).toISOString().split('T')[0],
-      transactions: Math.floor(Math.random() * 1000) + 500,
-      value: Math.floor(Math.random() * 50000) + 25000,
-      users: Math.floor(Math.random() * 100) + 50,
-      quality: Math.floor(Math.random() * 20) + 80
-    }));
-  };
-
-  const generateQualityData = () => {
-    return [
-      { grade: 'Premium A+', count: 156, percentage: 45, color: '#10B981' },
-      { grade: 'Grade A', count: 112, percentage: 32, color: '#3B82F6' },
-      { grade: 'Grade B', count: 58, percentage: 17, color: '#F59E0B' },
-      { grade: 'Grade C', count: 21, percentage: 6, color: '#EF4444' }
-    ];
-  };
 
   const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'];
 
