@@ -137,154 +137,174 @@ api.interceptors.response.use(
 
 // Demo mode interceptors
 if (isDemoMode) {
-  // Intercept requests and provide mock responses
-  api.interceptors.request.use(
-    (config) => {
-      // Store the original request for reference
-      config.isDemoRequest = true;
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+  // Override API methods to return mock data directly
+  // This is more reliable than intercepting network errors
+  api.get = (url, config = {}) => {
+    // Remove leading slash if present
+    const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
+    
+    // Handle different endpoints
+    if (cleanUrl.includes('batches/stats')) {
+      return Promise.resolve({
+        data: {
+          total: 156,
+          harvested: 45,
+          processed: 38,
+          tested: 35,
+          certified: 28,
+          shipped: 10
+        },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
     }
-  );
-  
-  api.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error) => {
-      // If it's a network error and we're in demo mode, provide mock data
-      if (error.code === 'ERR_NETWORK' || !error.response) {
-        const { config } = error;
-        const url = config.url;
-        
-        // Mock responses based on URL
-        if (url.includes('/auth/login')) {
-          return Promise.resolve({
-            data: {
-              token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
-              user: {
-                id: 1,
-                email: 'demo@example.com',
-                name: 'Demo User',
-                role: 'user',
-                permissions: ['read', 'write']
-              }
-            },
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config
-          });
-        }
-        
-        if (url.includes('/auth/register')) {
-          return Promise.resolve({
-            data: {
-              token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
-              user: {
-                id: Math.floor(Math.random() * 1000),
-                email: config.data.email,
-                name: config.data.name || config.data.email.split('@')[0],
-                role: 'user',
-                permissions: ['read', 'write']
-              }
-            },
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config
-          });
-        }
-        
-        if (url.includes('/auth/me')) {
-          return Promise.resolve({
-            data: {
-              user: {
-                id: 1,
-                email: 'demo@example.com',
-                name: 'Demo User',
-                role: 'user',
-                permissions: ['read', 'write']
-              }
-            },
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config
-          });
-        }
-        
-        if (url.includes('/batches')) {
-          if (url.includes('/stats')) {
-            return Promise.resolve({
-              data: {
-                total: 156,
-                harvested: 45,
-                processed: 38,
-                tested: 35,
-                certified: 28,
-                shipped: 10
-              },
-              status: 200,
-              statusText: 'OK',
-              headers: {},
-              config
-            });
-          }
-          
-          return Promise.resolve({
-            data: generateDemoBatches(),
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config
-          });
-        }
-        
-        if (url.includes('/events')) {
-          if (url.includes('/stats')) {
-            return Promise.resolve({
-              data: {
-                total: 428,
-                harvest: 89,
-                transport: 76,
-                processing: 92,
-                testing: 85,
-                certification: 54,
-                shipment: 32
-              },
-              status: 200,
-              statusText: 'OK',
-              headers: {},
-              config
-            });
-          }
-          
-          const batchId = url.split('/').pop();
-          return Promise.resolve({
-            data: generateDemoEvents(batchId),
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config
-          });
-        }
-        
-        // Default mock response
-        return Promise.resolve({
-          data: { message: 'Demo mode response' },
-          status: 200,
-          statusText: 'OK',
-          headers: {},
-          config
-        });
-      }
+    
+    if (cleanUrl.includes('events/stats')) {
+      return Promise.resolve({
+        data: {
+          total: 428,
+          harvest: 89,
+          transport: 76,
+          processing: 92,
+          testing: 85,
+          certification: 54,
+          shipment: 32
+        },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
+    }
+    
+    if (cleanUrl.includes('batches') && !cleanUrl.includes('stats')) {
+      // Handle pagination parameters
+      const params = config.params || {};
+      const limit = params.limit || 10;
+      const page = params.page || 1;
       
-      return Promise.reject(error);
+      // Generate demo batches
+      const allBatches = generateDemoBatches();
+      const startIndex = (page - 1) * limit;
+      const paginatedBatches = allBatches.slice(startIndex, startIndex + limit);
+      
+      return Promise.resolve({
+        data: paginatedBatches,
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
     }
-  );
+    
+    if (cleanUrl.includes('events') && !cleanUrl.includes('stats')) {
+      // Handle pagination parameters
+      const params = config.params || {};
+      const limit = params.limit || 10;
+      const page = params.page || 1;
+      
+      // For demo purposes, we'll generate events for a sample batch
+      const sampleBatchId = 'batch-1';
+      const allEvents = generateDemoEvents(sampleBatchId);
+      const startIndex = (page - 1) * limit;
+      const paginatedEvents = allEvents.slice(startIndex, startIndex + limit);
+      
+      return Promise.resolve({
+        data: paginatedEvents,
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
+    }
+    
+    // Default mock response
+    return Promise.resolve({
+      data: { message: 'Demo mode response' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config
+    });
+  };
+  
+  // Override POST method for demo mode
+  api.post = (url, data, config = {}) => {
+    // Remove leading slash if present
+    const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
+    
+    // Handle authentication endpoints
+    if (cleanUrl.includes('auth/login')) {
+      return Promise.resolve({
+        data: {
+          token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
+          user: {
+            id: 1,
+            email: data.identifier || 'demo@example.com',
+            name: 'Demo User',
+            role: 'user',
+            permissions: ['read', 'write']
+          }
+        },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
+    }
+    
+    if (cleanUrl.includes('auth/register')) {
+      return Promise.resolve({
+        data: {
+          token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
+          user: {
+            id: Math.floor(Math.random() * 1000),
+            email: data.email,
+            name: data.name || data.email.split('@')[0],
+            role: 'user',
+            permissions: ['read', 'write']
+          }
+        },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
+    }
+    
+    // Default mock response for other POST requests
+    return Promise.resolve({
+      data: { message: 'Demo mode POST response' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config
+    });
+  };
+  
+  // Override PUT method for demo mode
+  api.put = (url, data, config = {}) => {
+    return Promise.resolve({
+      data: { message: 'Demo mode PUT response' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config
+    });
+  };
+  
+  // Override DELETE method for demo mode
+  api.delete = (url, config = {}) => {
+    return Promise.resolve({
+      data: { message: 'Demo mode DELETE response' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config
+    });
+  };
 }
 
 // API methods
