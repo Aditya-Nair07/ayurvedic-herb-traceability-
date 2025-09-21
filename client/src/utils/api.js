@@ -22,37 +22,55 @@ const api = axios.create({
 
 // Demo data generators
 const generateDemoBatches = () => {
-  const herbTypes = ['Turmeric', 'Ashwagandha', 'Brahmi', 'Neem', 'Tulsi'];
+  const herbTypes = [
+    { name: 'Turmeric', emoji: '🟡' },
+    { name: 'Ashwagandha', emoji: '🌿' },
+    { name: 'Brahmi', emoji: '🌱' },
+    { name: 'Neem', emoji: '🍃' },
+    { name: 'Tulsi', emoji: '🌸' },
+    { name: 'Ginger', emoji: '🌶️' },
+    { name: 'Aloe Vera', emoji: '🌵' },
+    { name: 'Moringa', emoji: '🌳' }
+  ];
+  
   const farmers = [
     { name: 'Rajesh Kumar', location: 'Kerala, India', logo: '🌾' },
     { name: 'Priya Sharma', location: 'Himachal Pradesh, India', logo: '🌱' },
     { name: 'Amit Patel', location: 'Madhya Pradesh, India', logo: '🌿' },
     { name: 'Sunita Devi', location: 'Uttarakhand, India', logo: '🍃' },
-    { name: 'Vikram Singh', location: 'Tamil Nadu, India', logo: '🌺' }
+    { name: 'Vikram Singh', location: 'Tamil Nadu, India', logo: '🌺' },
+    { name: 'Anjali Mehta', location: 'Assam, India', logo: '🌼' },
+    { name: 'Ramesh Iyer', location: 'Karnataka, India', logo: '🌾' },
+    { name: 'Kavita Reddy', location: 'Andhra Pradesh, India', logo: '🌻' }
   ];
   
   const statuses = ['harvested', 'processed', 'tested', 'certified', 'shipped'];
   
-  return Array.from({ length: 20 }, (_, i) => {
+  return Array.from({ length: 25 }, (_, i) => {
     const herbType = herbTypes[i % herbTypes.length];
     const farmer = farmers[i % farmers.length];
     const status = statuses[i % statuses.length];
     
+    // Generate more realistic dates
+    const harvestDate = new Date(Date.now() - Math.random() * 45 * 24 * 60 * 60 * 1000);
+    const createdAt = new Date(harvestDate.getTime() - Math.random() * 5 * 24 * 60 * 60 * 1000);
+    
     return {
       batchId: `BATCH-${String(i + 1).padStart(4, '0')}`,
-      species: herbType,
+      species: herbType.name,
+      herbEmoji: herbType.emoji,
       farmer: farmer.name,
       farmerLogo: farmer.logo,
-      harvestDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      quantity: Math.floor(Math.random() * 1000) + 100,
+      harvestDate: harvestDate.toISOString().split('T')[0],
+      quantity: Math.floor(Math.random() * 1500) + 200, // Larger quantities
       status: status,
-      qualityScore: Math.floor(Math.random() * 20) + 80,
+      qualityScore: Math.floor(Math.random() * 15) + 85, // Higher quality scores
       harvestLocation: {
         address: farmer.location
       },
-      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: createdAt.toISOString(),
       complianceStatus: {
-        overall: Math.random() > 0.1 // 90% compliance rate
+        overall: Math.random() > 0.05 // 95% compliance rate
       }
     };
   });
@@ -65,33 +83,51 @@ const generateDemoEvents = (batchId) => {
     { type: 'processing', name: 'Processing', actor: 'Processor Ltd', logo: '⚙️' },
     { type: 'quality_test', name: 'Quality Test', actor: 'Lab Services', logo: '🔬' },
     { type: 'packaging', name: 'Packaging', actor: 'Packers Inc', logo: '📦' },
+    { type: 'certification', name: 'Certification', actor: 'Certification Body', logo: '📜' },
+    { type: 'shipment', name: 'Shipment', actor: 'Shipping Co', logo: '🚢' },
     { type: 'retail', name: 'Retail', actor: 'Ayurvedic Store', logo: '🏪' }
   ];
   
   const locations = [
-    'Kerala Farm',
-    'Processing Facility',
-    'Quality Lab',
-    'Distribution Center',
-    'Retail Store'
+    'Organic Farm - Kerala',
+    'Processing Facility - Bangalore',
+    'Quality Lab - Pune',
+    'Distribution Center - Mumbai',
+    'Retail Store - Delhi',
+    'Export Terminal - Chennai',
+    'Wholesale Market - Hyderabad'
   ];
   
-  return Array.from({ length: Math.floor(Math.random() * 5) + 3 }, (_, i) => {
+  const descriptions = [
+    'Completed harvesting process with optimal conditions',
+    'Quality testing passed with excellent results',
+    'Packaging completed with tamper-proof seals',
+    'Shipment dispatched to destination facility',
+    'Retail distribution completed successfully',
+    'Certification verified and approved',
+    'Transport logistics coordinated and executed'
+  ];
+  
+  return Array.from({ length: Math.floor(Math.random() * 8) + 5 }, (_, i) => {
     const eventType = eventTypes[i % eventTypes.length];
     const location = locations[i % locations.length];
+    const description = descriptions[i % descriptions.length];
+    
+    // Generate realistic timestamps
+    const eventDate = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000);
     
     return {
       eventId: `EVENT-${String(i + 1).padStart(4, '0')}`,
-      batchId: batchId || `BATCH-${String(Math.floor(Math.random() * 20) + 1).padStart(4, '0')}`,
+      batchId: batchId || `BATCH-${String(Math.floor(Math.random() * 25) + 1).padStart(4, '0')}`,
       eventType: eventType.type,
       eventName: eventType.name,
-      timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      timestamp: eventDate.toISOString(),
       location: {
         address: location
       },
       actorId: eventType.actor,
       actorLogo: eventType.logo,
-      description: `Completed ${eventType.name.toLowerCase()} process for ${batchId || 'batch'} at ${location}`
+      description: description
     };
   });
 };
@@ -197,9 +233,13 @@ if (isDemoMode) {
   
   // Override API methods to return mock data directly
   // This is more reliable than intercepting network errors
+  // eslint-disable-next-line no-unused-vars
   const originalGet = api.get;
+  // eslint-disable-next-line no-unused-vars
   const originalPost = api.post;
+  // eslint-disable-next-line no-unused-vars
   const originalPut = api.put;
+  // eslint-disable-next-line no-unused-vars
   const originalDelete = api.delete;
   
   api.get = (url, config = {}) => {
@@ -214,12 +254,14 @@ if (isDemoMode) {
       return Promise.resolve({
         data: {
           overview: {
-            totalBatches: 156,
-            harvested: 45,
-            processed: 38,
-            tested: 35,
-            certified: 28,
-            shipped: 10
+            totalBatches: 187,
+            harvested: 52,
+            processed: 45,
+            tested: 42,
+            certified: 38,
+            shipped: 15,
+            in_transit: 8,
+            packaged: 35
           }
         },
         status: 200,
@@ -237,20 +279,22 @@ if (isDemoMode) {
         date.setDate(date.getDate() - (6 - i));
         return {
           date: date.toISOString().split('T')[0],
-          count: Math.floor(Math.random() * 50) + 10
+          count: Math.floor(Math.random() * 80) + 20
         };
       });
       
       return Promise.resolve({
         data: {
           overview: {
-            totalEvents: 428,
-            harvest: 89,
-            transport: 76,
-            processing: 92,
-            testing: 85,
-            certification: 54,
-            shipment: 32
+            totalEvents: 542,
+            harvest: 98,
+            transport: 87,
+            processing: 112,
+            testing: 95,
+            certification: 68,
+            shipment: 42,
+            packaging: 75,
+            retail: 35
           },
           dailyActivity: dailyActivity
         },
@@ -266,10 +310,11 @@ if (isDemoMode) {
       return Promise.resolve({
         data: {
           overview: {
-            complianceRate: 95,
-            totalViolations: 3,
-            pendingReviews: 12,
-            resolvedIssues: 89
+            complianceRate: 96,
+            totalViolations: 2,
+            pendingReviews: 8,
+            resolvedIssues: 95,
+            compliantBatches: 178
           }
         },
         status: 200,
