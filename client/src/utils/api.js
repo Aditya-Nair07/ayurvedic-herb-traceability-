@@ -1,6 +1,9 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+// Check if we're in demo mode
+const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
+
 // Create axios instance
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
@@ -9,6 +12,33 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Demo data generators
+const generateDemoBatches = () => {
+  return Array.from({ length: 20 }, (_, i) => ({
+    id: `batch-${i + 1}`,
+    herbType: ['Turmeric', 'Ashwagandha', 'Brahmi', 'Neem', 'Tulsi'][i % 5],
+    farmer: `Farmer ${String.fromCharCode(65 + (i % 26))}`,
+    harvestDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    quantity: Math.floor(Math.random() * 1000) + 100,
+    status: ['harvested', 'processed', 'tested', 'certified', 'shipped'][i % 5],
+    qualityScore: Math.floor(Math.random() * 20) + 80,
+    location: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`
+  }));
+};
+
+const generateDemoEvents = (batchId) => {
+  const eventTypes = ['Harvest', 'Transport', 'Processing', 'Quality Test', 'Certification', 'Shipment'];
+  return Array.from({ length: Math.floor(Math.random() * 5) + 3 }, (_, i) => ({
+    id: `event-${batchId}-${i + 1}`,
+    batchId,
+    type: eventTypes[i % eventTypes.length],
+    timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+    location: `${Math.floor(Math.random() * 10 + 10)}.${Math.floor(Math.random() * 90)}, ${Math.floor(Math.random() * 10 + 70)}.${Math.floor(Math.random() * 90)}`,
+    actor: `Actor ${String.fromCharCode(65 + (i % 26))}`,
+    details: `Event details for ${eventTypes[i % eventTypes.length]}`
+  }));
+};
 
 // Request interceptor
 api.interceptors.request.use(
@@ -104,6 +134,158 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Demo mode interceptors
+if (isDemoMode) {
+  // Intercept requests and provide mock responses
+  api.interceptors.request.use(
+    (config) => {
+      // Store the original request for reference
+      config.isDemoRequest = true;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  
+  api.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      // If it's a network error and we're in demo mode, provide mock data
+      if (error.code === 'ERR_NETWORK' || !error.response) {
+        const { config } = error;
+        const url = config.url;
+        
+        // Mock responses based on URL
+        if (url.includes('/auth/login')) {
+          return Promise.resolve({
+            data: {
+              token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
+              user: {
+                id: 1,
+                email: 'demo@example.com',
+                name: 'Demo User',
+                role: 'user',
+                permissions: ['read', 'write']
+              }
+            },
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config
+          });
+        }
+        
+        if (url.includes('/auth/register')) {
+          return Promise.resolve({
+            data: {
+              token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
+              user: {
+                id: Math.floor(Math.random() * 1000),
+                email: config.data.email,
+                name: config.data.name || config.data.email.split('@')[0],
+                role: 'user',
+                permissions: ['read', 'write']
+              }
+            },
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config
+          });
+        }
+        
+        if (url.includes('/auth/me')) {
+          return Promise.resolve({
+            data: {
+              user: {
+                id: 1,
+                email: 'demo@example.com',
+                name: 'Demo User',
+                role: 'user',
+                permissions: ['read', 'write']
+              }
+            },
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config
+          });
+        }
+        
+        if (url.includes('/batches')) {
+          if (url.includes('/stats')) {
+            return Promise.resolve({
+              data: {
+                total: 156,
+                harvested: 45,
+                processed: 38,
+                tested: 35,
+                certified: 28,
+                shipped: 10
+              },
+              status: 200,
+              statusText: 'OK',
+              headers: {},
+              config
+            });
+          }
+          
+          return Promise.resolve({
+            data: generateDemoBatches(),
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config
+          });
+        }
+        
+        if (url.includes('/events')) {
+          if (url.includes('/stats')) {
+            return Promise.resolve({
+              data: {
+                total: 428,
+                harvest: 89,
+                transport: 76,
+                processing: 92,
+                testing: 85,
+                certification: 54,
+                shipment: 32
+              },
+              status: 200,
+              statusText: 'OK',
+              headers: {},
+              config
+            });
+          }
+          
+          const batchId = url.split('/').pop();
+          return Promise.resolve({
+            data: generateDemoEvents(batchId),
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config
+          });
+        }
+        
+        // Default mock response
+        return Promise.resolve({
+          data: { message: 'Demo mode response' },
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config
+        });
+      }
+      
+      return Promise.reject(error);
+    }
+  );
+}
 
 // API methods
 export const authAPI = {
