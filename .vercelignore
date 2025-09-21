@@ -1,21 +1,7 @@
-# Backend only
+# Ignore server-side files that might interfere with static serving
 server/
-
-# Blockchain infrastructure only (not components)
-smart-contracts/
-wallet/
-
-# Documentation
-docs/
-*.md
-
-# Scripts
-*.sh
-setup.sh
-
-# Environment
-.env
-.env.local
-
-# Logs
+api/
 logs/
+node_modules/
+.env
+*.log
