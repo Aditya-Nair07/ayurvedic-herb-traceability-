@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Package, MapPin, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Package, MapPin, CheckCircle, AlertTriangle, Calendar, Scale, User } from 'lucide-react';
 import LoadingSpinner from '../UI/LoadingSpinner';
 
 const RecentBatches = ({ batches, isLoading }) => {
@@ -15,10 +15,10 @@ const RecentBatches = ({ batches, isLoading }) => {
           <Package className="w-10 h-10 text-gray-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-700 mb-2">No batches found</h3>
-        <p className="text-gray-500 max-w-sm mx-auto">Get started by creating your first batch to track your herb supply chain.</p>
-        <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-          Create Batch
-        </button>
+        <p className="text-gray-500 max-w-sm mx-auto mb-6">Get started by creating your first batch to track your herb supply chain.</p>
+        <Link to="/batches/create" className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-xl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+          Create Your First Batch
+        </Link>
       </div>
     );
   }
@@ -43,23 +43,23 @@ const RecentBatches = ({ batches, isLoading }) => {
 
   const getComplianceIcon = (compliance) => {
     if (compliance?.overall) {
-      return <CheckCircle className="w-4 h-4 text-green-500" />;
+      return <CheckCircle className="w-5 h-5 text-green-500" />;
     }
-    return <AlertTriangle className="w-4 h-4 text-red-500" />;
+    return <AlertTriangle className="w-5 h-5 text-red-500" />;
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {batches.map((batch) => (
-        <div key={batch.batchId} className="group relative bg-white border border-gray-200 rounded-xl p-5 hover:shadow-xl hover:border-transparent transition-all duration-300 transform hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:to-gray-50">
+        <div key={batch.batchId} className="group relative bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl hover:border-transparent transition-all duration-300 transform hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:to-gray-50">
           {/* Gradient overlay on hover */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           
           <div className="relative flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-bold text-lg">{batch.farmerLogo || '🌾'}</span>
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-white font-bold text-xl">{batch.farmerLogo || '🌾'}</span>
                 </div>
               </div>
               <div className="flex-1 min-w-0">
@@ -74,32 +74,37 @@ const RecentBatches = ({ batches, isLoading }) => {
                     {getComplianceIcon(batch.complianceStatus)}
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 group-hover:bg-gray-200 transition-colors duration-200">
-                    {batch.species}
+                <div className="flex items-center space-x-4 mb-2">
+                  <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-green-100 to-green-200 text-green-800 group-hover:from-green-200 group-hover:to-green-300 transition-colors duration-200">
+                    {batch.herbEmoji || '🌿'} {batch.species}
                   </span>
                   <div className="flex items-center text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-200">
-                    <MapPin className="w-4 h-4 mr-1.5" />
-                    {batch.harvestLocation?.address || 'Unknown location'}
+                    <MapPin className="w-4 h-4 mr-1.5 flex-shrink-0" />
+                    <span className="truncate">{batch.harvestLocation?.address || 'Unknown location'}</span>
                   </div>
                 </div>
-                <div className="mt-1 text-sm text-gray-600">
-                  Farmer: {batch.farmer}
+                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <div className="flex items-center">
+                    <User className="w-4 h-4 mr-1.5 text-gray-400" />
+                    <span className="font-medium">{batch.farmer}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-1.5 text-gray-400" />
+                    <span>{new Date(batch.harvestDate).toLocaleDateString()}</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-end space-y-3">
+            <div className="flex flex-col items-end space-y-3 ml-4">
               {getStatusBadge(batch.status)}
               <div className="text-right">
-                <div className="text-sm font-medium text-gray-600">
-                  {new Date(batch.createdAt).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
+                <div className="flex items-center text-lg font-bold text-gray-900">
+                  <Scale className="w-5 h-5 mr-1.5 text-gray-400" />
+                  {batch.quantity}
+                  <span className="text-sm font-normal text-gray-500 ml-1">kg</span>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {batch.quantity} kg
+                  Quality: {batch.qualityScore}/100
                 </div>
               </div>
             </div>
