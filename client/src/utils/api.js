@@ -4,6 +4,13 @@ import toast from 'react-hot-toast';
 // Check if we're in demo mode
 const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
 
+// Log environment variables for debugging
+console.log('Environment variables:', {
+  REACT_APP_DEMO_MODE: process.env.REACT_APP_DEMO_MODE,
+  isDemoMode: isDemoMode,
+  REACT_APP_API_URL: process.env.REACT_APP_API_URL
+});
+
 // Create axios instance
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
@@ -137,14 +144,24 @@ api.interceptors.response.use(
 
 // Demo mode interceptors
 if (isDemoMode) {
+  console.log('Demo mode activated - overriding API methods');
+  
   // Override API methods to return mock data directly
   // This is more reliable than intercepting network errors
+  const originalGet = api.get;
+  const originalPost = api.post;
+  const originalPut = api.put;
+  const originalDelete = api.delete;
+  
   api.get = (url, config = {}) => {
+    console.log('Demo mode GET request:', url, config);
+    
     // Remove leading slash if present
     const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
     
     // Handle different endpoints
     if (cleanUrl.includes('batches/stats')) {
+      console.log('Returning mock batch stats');
       return Promise.resolve({
         data: {
           total: 156,
@@ -162,6 +179,7 @@ if (isDemoMode) {
     }
     
     if (cleanUrl.includes('events/stats')) {
+      console.log('Returning mock event stats');
       return Promise.resolve({
         data: {
           total: 428,
@@ -180,6 +198,7 @@ if (isDemoMode) {
     }
     
     if (cleanUrl.includes('batches') && !cleanUrl.includes('stats')) {
+      console.log('Returning mock batches');
       // Handle pagination parameters
       const params = config.params || {};
       const limit = params.limit || 10;
@@ -200,6 +219,7 @@ if (isDemoMode) {
     }
     
     if (cleanUrl.includes('events') && !cleanUrl.includes('stats')) {
+      console.log('Returning mock events');
       // Handle pagination parameters
       const params = config.params || {};
       const limit = params.limit || 10;
@@ -221,6 +241,7 @@ if (isDemoMode) {
     }
     
     // Default mock response
+    console.log('Returning default mock response');
     return Promise.resolve({
       data: { message: 'Demo mode response' },
       status: 200,
@@ -232,11 +253,14 @@ if (isDemoMode) {
   
   // Override POST method for demo mode
   api.post = (url, data, config = {}) => {
+    console.log('Demo mode POST request:', url, data, config);
+    
     // Remove leading slash if present
     const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
     
     // Handle authentication endpoints
     if (cleanUrl.includes('auth/login')) {
+      console.log('Returning mock login response');
       return Promise.resolve({
         data: {
           token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
@@ -256,6 +280,7 @@ if (isDemoMode) {
     }
     
     if (cleanUrl.includes('auth/register')) {
+      console.log('Returning mock register response');
       return Promise.resolve({
         data: {
           token: 'demo-jwt-token-' + Math.random().toString(36).substring(2),
@@ -275,6 +300,7 @@ if (isDemoMode) {
     }
     
     // Default mock response for other POST requests
+    console.log('Returning default POST mock response');
     return Promise.resolve({
       data: { message: 'Demo mode POST response' },
       status: 200,
@@ -286,6 +312,7 @@ if (isDemoMode) {
   
   // Override PUT method for demo mode
   api.put = (url, data, config = {}) => {
+    console.log('Demo mode PUT request:', url, data, config);
     return Promise.resolve({
       data: { message: 'Demo mode PUT response' },
       status: 200,
@@ -297,6 +324,7 @@ if (isDemoMode) {
   
   // Override DELETE method for demo mode
   api.delete = (url, config = {}) => {
+    console.log('Demo mode DELETE request:', url, config);
     return Promise.resolve({
       data: { message: 'Demo mode DELETE response' },
       status: 200,
@@ -305,6 +333,8 @@ if (isDemoMode) {
       config
     });
   };
+} else {
+  console.log('Demo mode NOT activated - using real API calls');
 }
 
 // API methods
