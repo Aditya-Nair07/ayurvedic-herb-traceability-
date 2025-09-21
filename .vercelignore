@@ -1,6 +1,5 @@
 # Ignore server-side files that might interfere with static serving
 server/
-api/
 logs/
 node_modules/
 .env
