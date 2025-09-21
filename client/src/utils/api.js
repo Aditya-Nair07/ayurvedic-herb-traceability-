@@ -164,12 +164,14 @@ if (isDemoMode) {
       console.log('Returning mock batch stats');
       return Promise.resolve({
         data: {
-          total: 156,
-          harvested: 45,
-          processed: 38,
-          tested: 35,
-          certified: 28,
-          shipped: 10
+          overview: {
+            totalBatches: 156,
+            harvested: 45,
+            processed: 38,
+            tested: 35,
+            certified: 28,
+            shipped: 10
+          }
         },
         status: 200,
         statusText: 'OK',
@@ -180,15 +182,46 @@ if (isDemoMode) {
     
     if (cleanUrl.includes('events/stats')) {
       console.log('Returning mock event stats');
+      // Generate daily activity data for the chart
+      const dailyActivity = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i));
+        return {
+          date: date.toISOString().split('T')[0],
+          count: Math.floor(Math.random() * 50) + 10
+        };
+      });
+      
       return Promise.resolve({
         data: {
-          total: 428,
-          harvest: 89,
-          transport: 76,
-          processing: 92,
-          testing: 85,
-          certification: 54,
-          shipment: 32
+          overview: {
+            totalEvents: 428,
+            harvest: 89,
+            transport: 76,
+            processing: 92,
+            testing: 85,
+            certification: 54,
+            shipment: 32
+          },
+          dailyActivity: dailyActivity
+        },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
+    }
+    
+    if (cleanUrl.includes('compliance/stats')) {
+      console.log('Returning mock compliance stats');
+      return Promise.resolve({
+        data: {
+          overview: {
+            complianceRate: 95,
+            totalViolations: 3,
+            pendingReviews: 12,
+            resolvedIssues: 89
+          }
         },
         status: 200,
         statusText: 'OK',
@@ -268,6 +301,7 @@ if (isDemoMode) {
             id: 1,
             email: data.identifier || 'demo@example.com',
             name: 'Demo User',
+            username: data.identifier?.split('@')[0] || 'demo',
             role: 'user',
             permissions: ['read', 'write']
           }
@@ -288,6 +322,7 @@ if (isDemoMode) {
             id: Math.floor(Math.random() * 1000),
             email: data.email,
             name: data.name || data.email.split('@')[0],
+            username: data.email?.split('@')[0] || 'user',
             role: 'user',
             permissions: ['read', 'write']
           }
