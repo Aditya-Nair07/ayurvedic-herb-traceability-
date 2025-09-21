@@ -1,24 +1,21 @@
-# Backend and infrastructure
+# Backend only
 server/
-blockchain/connection-profile.json
-blockchain/docker-compose.yml
-blockchain/start-network.sh
-blockchain/stop-network.sh
-smart-contracts/
-tests/
-docs/
 
-# Documentation and scripts
+# Blockchain infrastructure only (not components)
+smart-contracts/
+wallet/
+
+# Documentation
+docs/
 *.md
+
+# Scripts
 *.sh
 setup.sh
 
-# Environment and config
+# Environment
 .env
 .env.local
-node_modules/
-logs/
-wallet/
 
-# Git files
-.git/
+# Logs
+logs/
