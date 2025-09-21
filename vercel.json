@@ -1,9 +1,17 @@
 {
-  "buildCommand": "cd client && npm install && npm run build",
-  "outputDirectory": "client/build",
-  "installCommand": "echo 'skip'",
-  "env": {
-    "CI": "false",
-    "GENERATE_SOURCEMAP": "false"
-  }
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/node",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "client/build/$1"
+    }
+  ]
 }
