@@ -15,8 +15,16 @@ const EventDetail = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await api.get(`/events/${eventId}`);
-        setEvent(response.data);
+        // In demo mode, we need to search through the mock events
+        const response = await api.get('/events');
+        const events = response.data.data || [];
+        const foundEvent = events.find(e => e.eventId === eventId);
+        
+        if (foundEvent) {
+          setEvent(foundEvent);
+        } else {
+          setError('Event not found');
+        }
       } catch (err) {
         setError('Failed to fetch event details');
       } finally {
@@ -30,8 +38,8 @@ const EventDetail = () => {
   }, [eventId]);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <div className="text-red-500">{error}</div>;
-  if (!event) return <div>Event not found</div>;
+  if (error) return <div className="text-red-500 p-6">{error}</div>;
+  if (!event) return <div className="p-6">Event not found</div>;
 
   return (
     <div className="p-6">
@@ -50,17 +58,19 @@ const EventDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-lg font-semibold mb-2">Event Information</h3>
-            <p><strong>Type:</strong> {event.type}</p>
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-2">{event.actorLogo || '📋'}</span>
+              <p><strong>Type:</strong> {event.eventName || event.eventType}</p>
+            </div>
             <p><strong>Description:</strong> {event.description}</p>
             <p><strong>Timestamp:</strong> {new Date(event.timestamp).toLocaleString()}</p>
-            <p><strong>Created By:</strong> {event.createdBy}</p>
+            <p><strong>Actor:</strong> {event.actorId}</p>
           </div>
           
           <div>
             <h3 className="text-lg font-semibold mb-2">Related Information</h3>
             <p><strong>Batch ID:</strong> {event.batchId}</p>
-            <p><strong>Location:</strong> {event.location || 'N/A'}</p>
-            <p><strong>Status:</strong> {event.status}</p>
+            <p><strong>Location:</strong> {event.location?.address || 'N/A'}</p>
           </div>
         </div>
 

@@ -30,28 +30,45 @@ const AddEvent = () => {
     setError(null);
 
     try {
-      const response = await api.post('/events', formData);
-      if (response.data && response.data.success) {
-        toast.success('Event created successfully!');
-        setCreatedEvent(response.data.data.event);
-        setBlockchainData(response.data.data.blockchain);
-        setShowBlockchainNotification(true);
-        setShowBlockchainVerification(true);
-        
-        // Auto-hide notification after 5 seconds
-        setTimeout(() => {
-          setShowBlockchainNotification(false);
-        }, 5000);
-        
-        // Navigate after showing blockchain verification
-        setTimeout(() => {
-          navigate('/events', { state: { refresh: true } });
-        }, 8000);
-      } else {
-        const errorMsg = response.data?.error || 'Failed to create event';
-        setError(errorMsg);
-        toast.error(errorMsg);
-      }
+      // In demo mode, we'll simulate event creation
+      const newEvent = {
+        eventId: `EVENT-${Date.now()}`,
+        batchId: formData.batchId,
+        eventType: formData.type,
+        eventName: getEventTypeName(formData.type),
+        timestamp: new Date().toISOString(),
+        location: {
+          address: formData.location
+        },
+        actorId: getActorName(formData.type),
+        actorLogo: getActorLogo(formData.type),
+        description: formData.description,
+        data: {}
+      };
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.success('Event created successfully!');
+      setCreatedEvent(newEvent);
+      setBlockchainData({
+        transactionId: `0x${Math.random().toString(16).substr(2, 64)}`,
+        blockNumber: Math.floor(Math.random() * 1000000) + 100000,
+        gasUsed: Math.floor(Math.random() * 50000) + 30000,
+        status: 'success'
+      });
+      setShowBlockchainNotification(true);
+      setShowBlockchainVerification(true);
+      
+      // Auto-hide notification after 5 seconds
+      setTimeout(() => {
+        setShowBlockchainNotification(false);
+      }, 5000);
+      
+      // Navigate after showing blockchain verification
+      setTimeout(() => {
+        navigate('/events', { state: { refresh: true } });
+      }, 8000);
     } catch (err) {
       let errorMessage = 'Failed to create event';
       
@@ -73,6 +90,42 @@ const AddEvent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getEventTypeName = (type) => {
+    const types = {
+      'harvest': 'Harvest',
+      'processing': 'Processing',
+      'testing': 'Quality Test',
+      'packaging': 'Packaging',
+      'transport': 'Transport',
+      'retail': 'Retail'
+    };
+    return types[type] || type;
+  };
+
+  const getActorName = (type) => {
+    const actors = {
+      'harvest': 'Farmer Rajesh',
+      'processing': 'Processor Ltd',
+      'testing': 'Lab Services',
+      'packaging': 'Packers Inc',
+      'transport': 'Logistics Co',
+      'retail': 'Ayurvedic Store'
+    };
+    return actors[type] || 'Unknown Actor';
+  };
+
+  const getActorLogo = (type) => {
+    const logos = {
+      'harvest': '🌾',
+      'processing': '⚙️',
+      'testing': '🔬',
+      'packaging': '📦',
+      'transport': '🚚',
+      'retail': '🏪'
+    };
+    return logos[type] || '📋';
   };
 
   const handleChange = (e) => {

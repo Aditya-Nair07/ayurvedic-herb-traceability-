@@ -134,7 +134,10 @@ const Events = () => {
               {events.map((event) => (
                 <tr key={event.eventId}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {event.type || event.eventType}
+                    <div className="flex items-center">
+                      <span className="text-lg mr-2">{event.actorLogo || '📋'}</span>
+                      {event.eventName || event.eventType}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {event.description}
@@ -154,7 +157,10 @@ const Events = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900">
+                    <button 
+                      onClick={() => navigate(`/events/${event.eventId}`)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
                       View Details
                     </button>
                   </td>

@@ -34,14 +34,14 @@ const generateDemoBatches = () => {
   ];
   
   const farmers = [
-    { name: 'Rajesh Kumar', location: 'Kerala, India', logo: '🌾' },
-    { name: 'Priya Sharma', location: 'Himachal Pradesh, India', logo: '🌱' },
-    { name: 'Amit Patel', location: 'Madhya Pradesh, India', logo: '🌿' },
-    { name: 'Sunita Devi', location: 'Uttarakhand, India', logo: '🍃' },
-    { name: 'Vikram Singh', location: 'Tamil Nadu, India', logo: '🌺' },
-    { name: 'Anjali Mehta', location: 'Assam, India', logo: '🌼' },
-    { name: 'Ramesh Iyer', location: 'Karnataka, India', logo: '🌾' },
-    { name: 'Kavita Reddy', location: 'Andhra Pradesh, India', logo: '🌻' }
+    { name: 'Rajesh Kumar', location: 'Kerala, India', logo: '👨‍🌾' },
+    { name: 'Priya Sharma', location: 'Himachal Pradesh, India', logo: '👩‍🌾' },
+    { name: 'Amit Patel', location: 'Madhya Pradesh, India', logo: '👨‍💼' },
+    { name: 'Sunita Devi', location: 'Uttarakhand, India', logo: '👩‍💼' },
+    { name: 'Vikram Singh', location: 'Tamil Nadu, India', logo: '👨‍🔧' },
+    { name: 'Anjali Mehta', location: 'Assam, India', logo: '👩‍🔧' },
+    { name: 'Ramesh Iyer', location: 'Karnataka, India', logo: '👨‍🔬' },
+    { name: 'Kavita Reddy', location: 'Andhra Pradesh, India', logo: '👩‍🔬' }
   ];
   
   const statuses = ['harvested', 'processed', 'tested', 'certified', 'shipped'];
@@ -78,7 +78,7 @@ const generateDemoBatches = () => {
 
 const generateDemoEvents = (batchId) => {
   const eventTypes = [
-    { type: 'harvest', name: 'Harvest', actor: 'Farmer Rajesh', logo: '🌾' },
+    { type: 'harvest', name: 'Harvest', actor: 'Farmer Rajesh', logo: '👨‍🌾' },
     { type: 'transport', name: 'Transport', actor: 'Logistics Co', logo: '🚚' },
     { type: 'processing', name: 'Processing', actor: 'Processor Ltd', logo: '⚙️' },
     { type: 'quality_test', name: 'Quality Test', actor: 'Lab Services', logo: '🔬' },
@@ -450,6 +450,44 @@ if (isDemoMode) {
       });
     }
     
+    // Handle events creation
+    if (cleanUrl.includes('events')) {
+      console.log('Handling event creation in demo mode');
+      const newEvent = {
+        eventId: `EVENT-${Date.now()}`,
+        batchId: data.batchId,
+        eventType: data.type,
+        eventName: getEventTypeName(data.type),
+        timestamp: new Date().toISOString(),
+        location: {
+          address: data.location
+        },
+        actorId: getActorName(data.type),
+        actorLogo: getActorLogo(data.type),
+        description: data.description,
+        data: data.data || {}
+      };
+      
+      return Promise.resolve({
+        data: {
+          success: true,
+          data: {
+            event: newEvent,
+            blockchain: {
+              transactionId: `0x${Math.random().toString(16).substr(2, 64)}`,
+              blockNumber: Math.floor(Math.random() * 1000000) + 100000,
+              gasUsed: Math.floor(Math.random() * 50000) + 30000,
+              status: 'success'
+            }
+          }
+        },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config
+      });
+    }
+    
     // Default mock response for other POST requests
     console.log('Returning default POST mock response');
     return Promise.resolve({
@@ -577,6 +615,43 @@ export const isServerError = (error) => {
 
 export const isClientError = (error) => {
   return error.response && error.response.status >= 400 && error.response.status < 500;
+};
+
+// Helper functions for event creation
+const getEventTypeName = (type) => {
+  const types = {
+    'harvest': 'Harvest',
+    'processing': 'Processing',
+    'testing': 'Quality Test',
+    'packaging': 'Packaging',
+    'transport': 'Transport',
+    'retail': 'Retail'
+  };
+  return types[type] || type;
+};
+
+const getActorName = (type) => {
+  const actors = {
+    'harvest': 'Farmer Rajesh',
+    'processing': 'Processor Ltd',
+    'testing': 'Lab Services',
+    'packaging': 'Packers Inc',
+    'transport': 'Logistics Co',
+    'retail': 'Ayurvedic Store'
+  };
+  return actors[type] || 'Unknown Actor';
+};
+
+const getActorLogo = (type) => {
+  const logos = {
+    'harvest': '👨‍🌾',
+    'processing': '⚙️',
+    'testing': '🔬',
+    'packaging': '📦',
+    'transport': '🚚',
+    'retail': '🏪'
+  };
+  return logos[type] || '📋';
 };
 
 export default api;
