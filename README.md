@@ -1,6 +1,6 @@
-# Ayurvedic Herb Traceability System
+# BioTrace System
 
-A comprehensive blockchain-based botanical traceability system for Ayurvedic herbs built with Hyperledger Fabric, IPFS, and modern web technologies.
+A comprehensive blockchain-based botanical traceability system built with Hyperledger Fabric, IPFS, and modern web technologies.
 
 ## Features
 

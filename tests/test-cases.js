@@ -1,5 +1,5 @@
 /**
- * Ayurvedic Herb Traceability System - Test Cases
+ * BioTrace System - Test Cases
  * 
  * Comprehensive test suite for the blockchain-based herb traceability system
  */

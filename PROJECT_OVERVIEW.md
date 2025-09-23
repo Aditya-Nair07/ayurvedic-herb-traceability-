@@ -1,8 +1,8 @@
-# Ayurvedic Herb Traceability System - Project Overview
+# BioTrace System - Project Overview
 
 ## 🌿 Project Summary
 
-The **Ayurvedic Herb Traceability System** is a comprehensive blockchain-based solution designed to ensure complete transparency, authenticity, and compliance in the supply chain of Ayurvedic herbs. Built with modern technologies including Hyperledger Fabric, IPFS, React, and Node.js, this system provides end-to-end traceability from harvest to consumer.
+The **BioTrace System** is a comprehensive blockchain-based solution designed to ensure complete transparency, authenticity, and compliance in supply chains. Built with modern technologies including Hyperledger Fabric, IPFS, React, and Node.js, this system provides end-to-end traceability from harvest to consumer.
 
 ## 🎯 Key Features
 
@@ -340,6 +340,6 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ---
 
-**Built with ❤️ for the Ayurvedic community and sustainable herb cultivation**
+**Built with ❤️ for sustainable cultivation and supply chain transparency**
 
 For more information, visit our [documentation](docs/) or [GitHub repository](https://github.com/ayurvedic-herbs/traceability-system).

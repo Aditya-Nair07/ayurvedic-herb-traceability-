@@ -12,7 +12,7 @@ const SmartContractInterface = () => {
   }, []);
 
   const fetchContracts = () => {
-    // Mock smart contracts for Ayurvedic herb traceability
+    // Mock smart contracts for traceability
     const mockContracts = [
       {
         id: 'quality-assurance',

@@ -121,8 +121,8 @@ app.get('/manifest.json', (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
   
   const manifest = {
-    "short_name": "Herb Trace",
-    "name": "Ayurvedic Herb Traceability System",
+    "short_name": "BioTrace",
+    "name": "BioTrace System",
     "icons": [
       {
         "src": "favicon.ico",
@@ -134,7 +134,7 @@ app.get('/manifest.json', (req, res) => {
     "display": "standalone",
     "theme_color": "#3b82f6",
     "background_color": "#ffffff",
-    "description": "Blockchain-based botanical traceability system for Ayurvedic herbs",
+    "description": "Blockchain-based botanical traceability system",
     "categories": ["productivity", "business", "utilities"],
     "lang": "en",
     "dir": "ltr",
@@ -149,7 +149,7 @@ app.get('/manifest.json', (req, res) => {
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'Ayurvedic Herb Traceability API Server',
+    message: 'BioTrace API Server',
     version: '1.0.0',
     status: 'running',
     endpoints: {

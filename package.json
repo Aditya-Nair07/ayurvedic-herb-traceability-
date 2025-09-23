@@ -1,7 +1,7 @@
 {
-  "name": "ayurvedic-herb-traceability",
+  "name": "biotrace",
   "version": "1.0.0",
-  "description": "Blockchain-based botanical traceability system for Ayurvedic herbs",
+  "description": "Blockchain-based botanical traceability system for BioTrace",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
@@ -45,6 +45,6 @@
     "supply-chain",
     "hyperledger-fabric"
   ],
-  "author": "Ayurvedic Traceability System",
+  "author": "BioTrace System",
   "license": "MIT"
 }

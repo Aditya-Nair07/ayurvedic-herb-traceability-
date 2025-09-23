@@ -85,7 +85,7 @@ const generateDemoEvents = (batchId) => {
     { type: 'packaging', name: 'Packaging', actor: 'Packers Inc', logo: '📦' },
     { type: 'certification', name: 'Certification', actor: 'Certification Body', logo: '📜' },
     { type: 'shipment', name: 'Shipment', actor: 'Shipping Co', logo: '🚢' },
-    { type: 'retail', name: 'Retail', actor: 'Ayurvedic Store', logo: '🏪' }
+    { type: 'retail', name: 'Retail', actor: 'Retail Store', logo: '🏪' }
   ];
   
   const locations = [
@@ -637,7 +637,7 @@ const getActorName = (type) => {
     'testing': 'Lab Services',
     'packaging': 'Packers Inc',
     'transport': 'Logistics Co',
-    'retail': 'Ayurvedic Store'
+    'retail': 'Retail Store'
   };
   return actors[type] || 'Unknown Actor';
 };

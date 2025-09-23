@@ -30,7 +30,7 @@ const Header = ({ onMenuClick, onNotificationClick, unreadCount }) => {
           
           <div className="hidden lg:block">
             <h1 className="text-xl font-semibold text-gray-900">
-              Ayurvedic Herb Traceability
+              BioTrace
             </h1>
           </div>
         </div>

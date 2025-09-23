@@ -1,5 +1,5 @@
 /**
- * Offline Storage Utility for Ayurvedic Herb Traceability System
+ * Offline Storage Utility for BioTrace System
  * 
  * Provides offline functionality using IndexedDB for storing events
  * when the user is offline, with automatic sync when connection is restored.

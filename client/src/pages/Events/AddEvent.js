@@ -111,7 +111,7 @@ const AddEvent = () => {
       'testing': 'Lab Services',
       'packaging': 'Packers Inc',
       'transport': 'Logistics Co',
-      'retail': 'Ayurvedic Store'
+      'retail': 'Retail Store'
     };
     return actors[type] || 'Unknown Actor';
   };

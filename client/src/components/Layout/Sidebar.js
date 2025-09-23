@@ -104,8 +104,8 @@ const Sidebar = ({ isOpen, onClose }) => {
               </div>
             </div>
             <div className="ml-3">
-              <h1 className="text-lg font-semibold text-gray-900">Herb Trace</h1>
-              <p className="text-xs text-gray-500">Ayurvedic System</p>
+              <h1 className="text-lg font-semibold text-gray-900">BioTrace</h1>
+              <p className="text-xs text-gray-500">BioTrace System</p>
             </div>
           </div>
           <button
@@ -171,7 +171,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <div className="text-xs text-gray-500 text-center">
-            <p>Ayurvedic Herb Traceability</p>
+            <p>BioTrace System</p>
             <p>Version 1.0.0</p>
           </div>
         </div>

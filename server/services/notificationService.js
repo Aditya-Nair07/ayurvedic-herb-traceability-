@@ -109,13 +109,13 @@ class NotificationService {
   }
 
   async sendWelcomeEmail(userEmail, username, role) {
-    const subject = `Welcome to Ayurvedic Herb Traceability System`;
+    const subject = `Welcome to BioTrace System`;
     const text = `Welcome ${username}! Your account has been created with role: ${role}`;
     const html = `
-      <h2>Welcome to Ayurvedic Herb Traceability System</h2>
+      <h2>Welcome to BioTrace System</h2>
       <p>Hello ${username},</p>
       <p>Your account has been successfully created with the role: <strong>${role}</strong></p>
-      <p>You can now access the system and start tracking herb batches.</p>
+      <p>You can now access the system and start tracking batches.</p>
     `;
 
     return await this.sendEmail(userEmail, subject, text, html);

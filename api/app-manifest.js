@@ -15,8 +15,8 @@ export default function handler(req, res) {
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
   
   const manifest = {
-    "short_name": "Herb Trace",
-    "name": "Ayurvedic Herb Traceability System",
+    "short_name": "BioTrace",
+    "name": "BioTrace System",
     "icons": [
       {
         "src": "favicon.ico",
@@ -28,7 +28,7 @@ export default function handler(req, res) {
     "display": "standalone",
     "theme_color": "#3b82f6",
     "background_color": "#ffffff",
-    "description": "Blockchain-based botanical traceability system for Ayurvedic herbs",
+    "description": "Blockchain-based botanical traceability system",
     "categories": ["productivity", "business", "utilities"],
     "lang": "en",
     "dir": "ltr",

@@ -1,7 +1,7 @@
 {
-  "name": "ayurvedic-herb-traceability-server",
+  "name": "biotrace-server",
   "version": "1.0.0",
-  "description": "Backend API for Ayurvedic Herb Traceability System",
+  "description": "Backend API for BioTrace System",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

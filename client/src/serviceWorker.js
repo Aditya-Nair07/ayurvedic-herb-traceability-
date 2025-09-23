@@ -1,4 +1,4 @@
-// This service worker provides offline functionality for the Ayurvedic Herb Traceability System
+// This service worker provides offline functionality for the BioTrace System
 
 const CACHE_NAME = 'herb-traceability-v1';
 const urlsToCache = [
@@ -61,7 +61,7 @@ self.addEventListener('sync', (event) => {
 // Push notifications
 self.addEventListener('push', (event) => {
   const options = {
-    body: event.data ? event.data.text() : 'New notification from Herb Traceability System',
+    body: event.data ? event.data.text() : 'New notification from BioTrace System',
     icon: '/logo192.png',
     badge: '/favicon.ico',
     vibrate: [100, 50, 100],
@@ -84,7 +84,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('Herb Traceability System', options)
+    self.registration.showNotification('BioTrace System', options)
   );
 });
 

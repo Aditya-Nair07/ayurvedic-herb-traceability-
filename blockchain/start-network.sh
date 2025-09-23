@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ayurvedic Herb Traceability - Hyperledger Fabric Network Startup Script
+# BioTrace - Hyperledger Fabric Network Startup Script
 
 set -e
 
@@ -10,7 +10,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}Starting Ayurvedic Herb Traceability Blockchain Network...${NC}"
+echo -e "${GREEN}Starting BioTrace Blockchain Network...${NC}"
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then

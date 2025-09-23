@@ -130,7 +130,7 @@ const BlockchainDashboard = () => {
             🔗 Advanced Blockchain Ecosystem
           </h1>
           <p className="text-gray-600 text-lg">
-            Next-Generation Blockchain Platform for Ayurvedic Herb Traceability
+            Next-Generation Blockchain Platform for BioTrace
           </p>
           <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full mt-4 ${
             networkStatus === 'healthy' ? 'bg-green-100 text-green-800' : 

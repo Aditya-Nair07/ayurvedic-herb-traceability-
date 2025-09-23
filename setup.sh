@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ayurvedic Herb Traceability System - Setup Script
+# BioTrace System - Setup Script
 # This script automates the setup process for the complete system
 
 set -e
@@ -268,7 +268,7 @@ start_services() {
 show_final_instructions() {
     print_success "Setup completed successfully!"
     echo ""
-    echo -e "${GREEN}🎉 Ayurvedic Herb Traceability System is ready!${NC}"
+    echo -e "${GREEN}🎉 BioTrace System is ready!${NC}"
     echo ""
     echo "Next steps:"
     echo "1. Start the Hyperledger Fabric network:"
@@ -300,7 +300,7 @@ show_final_instructions() {
 main() {
     echo -e "${BLUE}"
     echo "=========================================="
-    echo "  Ayurvedic Herb Traceability System"
+    echo "  BioTrace System"
     echo "           Setup Script"
     echo "=========================================="
     echo -e "${NC}"

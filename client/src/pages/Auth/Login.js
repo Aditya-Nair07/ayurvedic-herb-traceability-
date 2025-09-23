@@ -45,7 +45,7 @@ const Login = () => {
           <div className="w-32 h-32 bg-white bg-opacity-20 rounded-3xl flex items-center justify-center mb-8 backdrop-blur-sm">
             <span className="text-white font-bold text-4xl">AH</span>
           </div>
-          <h1 className="text-4xl font-bold mb-4 text-center">Ayurvedic Herb Traceability</h1>
+          <h1 className="text-4xl font-bold mb-4 text-center">BioTrace System</h1>
           <p className="text-xl text-blue-100 text-center max-w-md leading-relaxed">
             Track your herbs from farm to pharmacy with complete transparency and trust
           </p>

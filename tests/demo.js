@@ -1,5 +1,5 @@
 /**
- * Ayurvedic Herb Traceability System - Demonstration Script
+ * BioTrace System - Demonstration Script
  * 
  * This script demonstrates the complete functionality of the blockchain-based
  * herb traceability system using Ashwagandha as an example.
@@ -397,7 +397,7 @@ class HerbTraceabilityDemo {
 
   // Run complete demonstration
   async runDemo() {
-    console.log('🚀 Starting Ayurvedic Herb Traceability System Demonstration');
+    console.log('🚀 Starting BioTrace System Demonstration');
     console.log('=' .repeat(60));
 
     try {

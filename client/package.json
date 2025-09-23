@@ -1,7 +1,7 @@
 {
-  "name": "ayurvedic-herb-traceability-client",
+  "name": "biotrace-client",
   "version": "1.0.0",
-  "description": "Frontend application for Ayurvedic Herb Traceability System",
+  "description": "Frontend application for BioTrace System",
   "private": true,
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",

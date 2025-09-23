@@ -1,6 +1,6 @@
-# Contributing to Ayurvedic Herb Traceability System
+# Contributing to BioTrace System
 
-Thank you for your interest in contributing to the Ayurvedic Herb Traceability System! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to the BioTrace System! This document provides guidelines and information for contributors.
 
 ## Table of Contents
 
@@ -429,4 +429,4 @@ Contributors will be recognized in:
 - Release notes
 - Project documentation
 
-Thank you for contributing to the Ayurvedic Herb Traceability System! 🌿
+Thank you for contributing to the BioTrace System! 🌿
